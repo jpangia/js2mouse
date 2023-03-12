@@ -13,6 +13,7 @@ Author: James Pangia
    keyboard/mouse inputs
 
    Notes:
+
     Designed for use with an XBox 360 controller; behavior for other joystick devices
     is undefined.
 
@@ -21,22 +22,34 @@ Author: James Pangia
     pretty sure that event type 129 is button init and 130 is axis init
     also, when opening a js device, it runs through an init cycle that tests all the joystick elements
 
-   Dependencies:
+    js2mouse_v1.c is an old version
+
+<h2>Dependencies:</h2>
+
     xdotool
         standalone in Debian-based systems; installed with `sudo apt install xdotool`
         standalone for Arch-based as well; installed with `sudo pacman -S[yu] xdotool`
 
-   <h2>TODO:</h2>
-   - translate usage of system() into exec family of functions (see man 3 execl)
-   - using execl will also allow for checking if xdotool is installed
-   - maybe look into option to use wayland-based equivalent of xdotool
-     (there exists ydotool, which is intended to be a drop-in replacement for xdotool)
-   - security risk: config file could inject malicious code into system() calls
+<h2>Known Bugs</h2>
+1
+-
+<code>read()</code> call returning 2^64 bytes when reading from the joystick file.
+even though there is a max parameter that seems like it should give the maximum number of bytes to read
+2
+-
+memory overflow crash when reading from stdin
+
+<h2>TODO:</h2>
+	- translate usage of system() into exec family of functions (see man 3 execl)
+	- using execl will also allow for checking if xdotool is installed
+	- maybe look into option to use wayland-based equivalent of xdotool
+		(there exists ydotool, which is intended to be a drop-in replacement for xdotool)
+	- security risk: config file could inject malicious code into system() calls
         but if the program reads the file expecting an int,
             then the program should crash at worst,
             so I think it's ok
    - research chardevice files to learn more about js0
-   -/!\ look into using access again; looks like it can return 0 on an empty device file
+   - /!\ look into using access again; looks like it can return 0 on an empty device file
 
    check file before reading in the loop
    record time since last input; prompt user to quit if left for too long
@@ -68,11 +81,9 @@ Yes, I'm calling shell commands in a C program.
 <h2>solution to getting both axis values from one event</h2>
 code slippet from: https://archives.seul.org/linuxgames/Aug-1999/msg00107.html
 
-<code>
-while( 1 ) 	/* infinite loop */
+	while( 1 ) 	/* infinite loop */
 	{
-
-			/* read the joystick state */
+		/* read the joystick state */
 		read(joy_fd, &js, sizeof(struct js_event));
 
 			/* see what to do with the event */
@@ -101,7 +112,6 @@ while( 1 ) 	/* infinite loop */
 		printf("  \r");
 		fflush(stdout);
 	}
-</code>
 
 note that every event sets values in an axis[] array. This way, a running book of the axis states is kept,
 updated by every caught event
