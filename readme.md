@@ -33,10 +33,13 @@ Author: James Pangia
 <h2>Known Bugs</h2>
 1
 -
+
 <code>read()</code> call returning 2^64 bytes when reading from the joystick file.
 even though there is a max parameter that seems like it should give the maximum number of bytes to read
+
 2
 -
+
 memory overflow crash when reading from stdin
 
 <h2>TODO:</h2>
