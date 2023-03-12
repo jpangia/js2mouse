@@ -2,7 +2,7 @@
 
 Author: James Pangia
 
-   usage: ./js2mouse [deviceName] [L]
+    usage: ./js2mouse [deviceName] [L]
 
     deviceName: the name of the joystick device to read; expects a js* device name
                 If no device is specified, /dev/input/js0 is used.
@@ -26,7 +26,7 @@ Author: James Pangia
         standalone in Debian-based systems; installed with `sudo apt install xdotool`
         standalone for Arch-based as well; installed with `sudo pacman -S[yu] xdotool`
 
-   TODO:
+   <h2>TODO:</h2>
    - translate usage of system() into exec family of functions (see man 3 execl)
    - using execl will also allow for checking if xdotool is installed
    - maybe look into option to use wayland-based equivalent of xdotool
@@ -44,7 +44,7 @@ Author: James Pangia
     pass the struct as a const pointer in each function that uses config values
 
 
-   Long-Term TODO:
+   <h2>Long-Term TODO:</h2>
    port to C++, making the joystick utilities being part of a class
 <h1>dev notes:</h1>
 <p>
