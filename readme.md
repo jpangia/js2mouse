@@ -67,6 +67,7 @@ Yes, I'm calling shell commands in a C program.
 
 <h2>solution to getting both axis values from one event</h2>
 code slippet from: https://archives.seul.org/linuxgames/Aug-1999/msg00107.html
+
 <code>
 while( 1 ) 	/* infinite loop */
 	{
