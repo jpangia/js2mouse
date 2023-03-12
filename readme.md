@@ -31,6 +31,7 @@ Author: James Pangia
         standalone for Arch-based as well; installed with `sudo pacman -S[yu] xdotool`
 
 <h2>Known Bugs</h2>
+
 1
 -
 
