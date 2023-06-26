@@ -132,4 +132,11 @@ This is from the Bullet physics library: https://pybullet.org/Bullet/BulletFull/
 <h2>Note on read mode for sockets</h2>
 in https://docs.python.org/3/howto/sockets.html#non-blocking-sockets:
 it mentions that O_NONBLOCK is a BSD flavor flag. O_NDELAY is a POSIX flavor flag. Perhaps using POSIX would solve the weird reading behavior
+
+<h2>A note on checking for data in the file:</h2>
+in https://unix.stackexchange.com/a/25607
+
+they say to use <code>poll()</code> or <code>select()</code> to check for incoming data
 </p>
+
+
