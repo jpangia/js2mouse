@@ -41,7 +41,7 @@ even though there is a max parameter that seems like it should give the maximum 
 2
 -
 
-memory overflow crash when reading from stdin
+memory overflow crash when reading from stdin. Occurs for both using getline and getchar
 
 <h2>TODO:</h2>
 	- translate usage of system() into exec family of functions (see man 3 execl)

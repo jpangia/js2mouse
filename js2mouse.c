@@ -15,36 +15,10 @@
     Designed for use with an XBox 360 controller; behavior for other joystick devices
     is undefined.
   
-    used as example, but not directly copied: https://gist.github.com/jasonwhite/c5b2048c15993d285130
-  
-    pretty sure that event type 129 is button init and 130 is axis init
-    also, when opening a js device, it runs through an init cycle that tests all the joystick elements
-  
    Dependencies:
     xdotool 
         standalone in Debian-based systems; installed with `sudo apt install xdotool`
-        standalone for Arch-based as well; installed with `sudo pacman -S[yu] xdotool`
-    
-   TODO:
-   - translate usage of system() into exec family of functions (see man 3 execl)
-   - using execl will also allow for checking if xdotool is installed
-   - maybe look into option to use wayland-based equivalent of xdotool
-     (there exists ydotool, which is intended to be a drop-in replacement for xdotool)
-   - security risk: config file could inject malicious code into system() calls
-        but if the program reads the file expecting an int,
-            then the program should crash at worst,
-            so I think it's ok
-   - research chardevice files to learn more about js0
-   -/!\ look into using access again; looks like it can return 0 on an empty device file
-   
-   check file before reading in the loop
-   record time since last input; prompt user to quit if left for too long
-   port the config values to a struct that gets populated by a config file and 
-    pass the struct as a const pointer in each function that uses config values
-
-
-   Long-Term TODO:
-   port to C++, making the joystick utilities being part of a class
+        standalone for Arch-based as well; installed with `sudo pacman -S[yu] xdotool`s
 */
 
 #include <stdlib.h> //for system()
@@ -133,7 +107,7 @@ int main(int argc, char* argv[])
 #endif
 
     //TODO: make sure that xdotool is available
-    //check config file; it should specify wayland tool or xdotool
+    //check config file; it should specify ydotool or xdotool
     //dummy call to tool using execl
     //if execl sends fail, send an error and quit
 
@@ -181,13 +155,19 @@ int main(int argc, char* argv[])
         printf("Error: failed to open device %s\nExiting....", devicePath);
         return -1;
     }
+    
 
     //get the number of axes in the device
     int axisCount = 0;
     ioctl(js, JSIOCGAXES, &axisCount);
 
+    printf("axisCount: %d\n", axisCount); //debug
+    printf("sizeof(int): %ld\n", sizeof(int)); //debug
+
     //dynamically allocate an array of axis values, with one cell per axis
     int* axes = (int*) calloc(axisCount, sizeof(int)); //gives an array filled with 0's
+
+    // getchar(); //put a getchar here and the memory bug from reading stdin stops....
 
     //read first event
     /*size_t numRead = */read(js, &event, sizeof(struct js_event));
@@ -198,9 +178,8 @@ int main(int argc, char* argv[])
     //a flag to quit the loop; gets set when XBOX_BTN is pressed
     bool quit = false;
 
-    //begin loop to read all the events until no event is read
-    //if numRead is not sizeof(struct js_event), then the controller got disconnected and it's time to stop;
-    //for some reason read() is returning 18,446,744,073,709,551,615 = (2^64)-1, not -1 when the joystick disconnects
+    //begin loop to read all the events until it's time to quit
+    //TODO: for some reason read() is returning 18,446,744,073,709,551,615 = (2^64)-1, not -1 when the joystick disconnects
     while(!quit)
     {
         //check the timeout
@@ -208,13 +187,16 @@ int main(int argc, char* argv[])
         {
             printf("It has been %d seconds since last input.\n", TIME_OUT);
             printf("Do you want to quit (y/n): ");
+            // printf("\n");
+            
             char inC = getchar(); //TODO: crashes as soon as I try to read user input....
-            getchar(); //flush the \n
             if('y' == inC)
             {
                 printf("Closing. . . .\n");
                 break;
             }
+
+            timeSince = time(NULL); //reset timeSince
         }
 
         #if DEBUG
@@ -257,7 +239,7 @@ int main(int argc, char* argv[])
         {
             printf("Error: Tried to move an axis the device does not have\n");
             printf("\tAxes to move: %d, %d\n\tAxis count: %d\n", hStick, vStick, axisCount);
-            timeSince = time(NULL); printf("moo\n");//debug //reset the time
+            timeSince = time(NULL); //reset the time
         }
         //if the values were in the deadzone
         else if(1 == success)
@@ -268,7 +250,7 @@ int main(int argc, char* argv[])
         //handle buttons, taking button press events, excluding button release events
         if(JS_EVENT_BUTTON == event.type && true == event.value)
         {
-            timeSince = time(NULL); printf("moo\n");//debug
+            timeSince = time(NULL);
             //TODO: move this logic into a button handler function
             switch(event.number)
             {
