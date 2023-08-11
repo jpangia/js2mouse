@@ -44,6 +44,7 @@ even though there is a max parameter that seems like it should give the maximum 
 memory overflow crash when reading from stdin. Occurs for both using getline and getchar
 
 <h2>TODO:</h2>
+	- re-compile with debug info and check valgrind output. see if solving the "address is 0 bytes after a block of size 32 is alloc'd" error fixes the crash 
 	- translate usage of system() into exec family of functions (see man 3 execl)
 	- using execl will also allow for checking if xdotool is installed
 	- maybe look into option to use wayland-based equivalent of xdotool
