@@ -47,7 +47,7 @@ memory overflow crash when reading from stdin. Occurs for both using getline and
 	- re-compile with debug info and check valgrind output. see if solving the "address is 0 bytes after a block of size 32 is alloc'd" error fixes the crash 
 	- translate usage of system() into exec family of functions (see man 3 execl)
 	- using execl will also allow for checking if xdotool is installed
-	- maybe look into option to use wayland-based equivalent of xdotool
+	- look into option to use wayland-based equivalent of xdotool
 		(there exists ydotool, which is intended to be a drop-in replacement for xdotool)
 	- security risk: config file could inject malicious code into system() calls
         but if the program reads the file expecting an int,
@@ -63,7 +63,8 @@ memory overflow crash when reading from stdin. Occurs for both using getline and
 
 
    <h2>Long-Term TODO:</h2>
-   port to C++, making the joystick utilities being part of a class
+   - port to C++, making the joystick utilities being part of a class
+   - investigate porting to Rust. If Rust supports an analog of the C joystick header, then that will probably get around the weird read bug. Might be able to use the C header directly, depending on how cross-language support works
 <h1>dev notes:</h1>
 <p>
 xorg xlib docs:
